@@ -34,10 +34,19 @@ describe('Testes no site Magazine Luiza', () => {
     });
     cy.get('[data-testid="stereo-login_menu-unsigned_user_state-container"] > [data-testid="link"]').click();
     cy.get('#LoginBox-form > :nth-child(1) > .FormGroup-label').type('nathaliaaparecida1804@gmail.com');
-    cy.get(':nth-child(2) > .FormGroup-label').type('Inatel123!');
+    cy.get('input[type="password"]').type('Inatel123!');
     cy.get('#login-box-form-continue').click()
   });
 
-  
+  it('Teste de e-mail inválido', () => {
+    cy.on('uncaught:exception', (err, runnable) => {
+      return false;
+    });
+    cy.get('[data-testid="stereo-login_menu-unsigned_user_state-container"] > [data-testid="link"]').click();
+    cy.get('#LoginBox-form > :nth-child(1) > .FormGroup-label').type('emailerradoo@gmail.com');
+    cy.get('input[type="password"]').type('1111111111111');
+    cy.get('#login-box-form-continue').click();
+    cy.get('.font-2xsm-bold').should('contain.text', 'Dados inválidos');
+  });
 
 });
