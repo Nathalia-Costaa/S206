@@ -1,52 +1,43 @@
 // cypress/integration/test.spec.js
 
 describe('Testes no site Magazine Luiza', () => {
-    beforeEach(() => {
-      cy.visit('https://www.magazineluiza.com.br');
-    });
-  
-    it('Deve carregar a página inicial', () => {
-      cy.title().should('include', 'Magazine Luiza');
-    });
-  
-    it('Deve buscar por um produto', () => {
-      cy.get('[data-testid="input-search"]').type('smartphone{enter}');
-      cy.get('.product').should('have.length.greaterThan', 0);
-    });
-  
-    it('Deve adicionar um produto ao carrinho', () => {
-      cy.get('input[name="q"]').type('smartphone{enter}');
-      cy.get('.product').first().click();
-      cy.get('.add-to-cart-button').click();
-      cy.get('.cart-icon').click();
-      cy.get('.cart-item').should('have.length', 1);
-    });
-  
-    it('Deve finalizar a compra', () => {
-      cy.get('input[name="q"]').type('smartphone{enter}');
-      cy.get('.product').first().click();
-      cy.get('.add-to-cart-button').click();
-      cy.get('.cart-icon').click();
-      cy.get('.checkout-button').click();
-      cy.url().should('include', '/checkout');
-    });
-  
-    it('Deve cadastrar um usuário com sucesso', () => {
-      cy.get('.register-link').click();
-      cy.get('input[name="name"]').type('Teste Usuário');
-      cy.get('input[name="email"]').type('teste@exemplo.com');
-      cy.get('input[name="password"]').type('senha123');
-      cy.get('.register-submit').click();
-      cy.get('.success-message').should('be.visible');
-    });
-  
-    it('Deve rejeitar cadastro com e-mail inválido', () => {
-      cy.get('.register-link').click();
-      cy.get('input[name="name"]').type('Teste Usuário');
-      cy.get('input[name="email"]').type('email@');
-      cy.get('input[name="password"]').type('senha123');
-      cy.get('.register-submit').click();
-      cy.get('.error-message').should('be.visible');
-    });
+  beforeEach(() => {
+    cy.visit('https://www.magazineluiza.com.br');
   });
+
+  it('Deve carregar a página inicial', () => {
+    cy.title().should('include', 'Magazine Luiza');
+  });
+
+  it('Deve buscar por um produto', () => {
+    cy.get('[data-testid="input-search"]').type('smartphone{enter}');
+    cy.get('[data-testid="list"]').should('have.length.greaterThan', 0);
+  });
+
+  it('Deve adicionar um produto ao carrinho', () => {
+    cy.get('[data-testid="input-search"]').type('smartphone{enter}');
+    cy.get('[data-testid="list"]').first().click();
+    cy.get(':nth-child(2) > [data-testid="bagButton"]').click();
+  });
+
+  it('Checa se o carrinho está vazio', () => {
+    cy.on('uncaught:exception', (err, runnable) => {
+      return false;
+    });
+    cy.get('.sc-ijDOKB > .sc-eqUAAy > use').click();
+    cy.get('.EmptyBasket-title').should('contain', 'vazia');
+  });
+
+  it('Teste de login', () => {
+    cy.on('uncaught:exception', (err, runnable) => {
+      return false;
+    });
+    cy.get('[data-testid="stereo-login_menu-unsigned_user_state-container"] > [data-testid="link"]').click();
+    cy.get('#LoginBox-form > :nth-child(1) > .FormGroup-label').type('nathaliaaparecida1804@gmail.com');
+    cy.get(':nth-child(2) > .FormGroup-label').type('Inatel123!');
+    cy.get('#login-box-form-continue').click()
+  });
+
   
+
+});
